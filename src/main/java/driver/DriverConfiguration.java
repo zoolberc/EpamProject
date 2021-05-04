@@ -13,20 +13,21 @@ import pages.EventsPage;
 import pages.HomePage;
 import pages.VideoPage;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
-public class WebDriverFactory {
+public class DriverConfiguration {
     public WebDriver driver;
     private String browser;
     SelfHealingDriver selfDriver;
     public HomePage homePage;
     public EventsPage eventsPage;
     public VideoPage videoPage;
-    public Logger logger = LogManager.getLogger(WebDriverFactory.class);
+    public Logger logger = LogManager.getLogger(DriverConfiguration.class);
 
     @Before
-    public void SetUp() {
+    public void SetUp() throws MalformedURLException {
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setBrowserName("chrome");
@@ -34,8 +35,7 @@ public class WebDriverFactory {
         capabilities.setCapability("enableVNC", true);
         capabilities.setCapability("enableVideo", false);
         RemoteWebDriver driver = new RemoteWebDriver(
-                URI.create("http://selenoid:4444/wd/hub").toURL(),
-                capabilities
+                URI.create("http://selenoid:4444/wd/hub").toURL(), capabilities
         );
         selfDriver = SelfHealingDriver.create(driver);
         logger.info("Browser driver open");

@@ -1,11 +1,11 @@
-import driver.WebDriverFactory;
+import driver.DriverConfiguration;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import pages.EventsPage;
 
 import java.text.ParseException;
 
-public class EpamEventsTest extends WebDriverFactory {
+public class EpamEventsTest extends DriverConfiguration {
 
     @Test
     @DisplayName("Просмотр предстоящих мероприятий")
