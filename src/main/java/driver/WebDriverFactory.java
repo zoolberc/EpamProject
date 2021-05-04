@@ -1,23 +1,25 @@
 package driver;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import com.epam.healenium.SelfHealingDriver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.opera.OperaDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.PageFactory;
 import pages.EventsPage;
 import pages.HomePage;
 import pages.VideoPage;
 
+import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 public class WebDriverFactory {
     public WebDriver driver;
     private String browser;
+    SelfHealingDriver selfDriver;
     public HomePage homePage;
     public EventsPage eventsPage;
     public VideoPage videoPage;
@@ -25,33 +27,23 @@ public class WebDriverFactory {
 
     @Before
     public void SetUp() {
-        if (System.getProperty("Browser") == null) {
-            browser = "";
-        } else {
-            browser = System.getProperty("Browser").toLowerCase();
-        }
 
-        switch (browser) {
-            case ("\'opera\'"):
-                WebDriverManager.operadriver().setup();
-                driver = new OperaDriver();
-                break;
-
-            case ("\'firefox\'"):
-                WebDriverManager.firefoxdriver().setup();
-                break;
-
-            default:
-                WebDriverManager.chromedriver().setup();
-                driver = new ChromeDriver();
-                break;
-        }
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setBrowserName("chrome");
+        capabilities.setVersion("79.0");
+        capabilities.setCapability("enableVNC", true);
+        capabilities.setCapability("enableVideo", false);
+        RemoteWebDriver driver = new RemoteWebDriver(
+                URI.create("http://selenoid:4444/wd/hub").toURL(),
+                capabilities
+        );
+        selfDriver = SelfHealingDriver.create(driver);
         logger.info("Browser driver open");
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-        homePage = PageFactory.initElements(driver,HomePage.class);
-        eventsPage = PageFactory.initElements(driver,EventsPage.class);
-        videoPage = PageFactory.initElements(driver,VideoPage.class);
+        homePage = PageFactory.initElements(selfDriver, HomePage.class);
+        eventsPage = PageFactory.initElements(selfDriver, EventsPage.class);
+        videoPage = PageFactory.initElements(selfDriver, VideoPage.class);
     }
 
     @After
