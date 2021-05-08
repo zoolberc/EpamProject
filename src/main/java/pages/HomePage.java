@@ -2,7 +2,6 @@ package pages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -16,6 +15,7 @@ public class HomePage {
     public HomePage(WebDriver driver) {
         this.driver = driver;
     }
+
     @FindBy(xpath = "//*[@id=\"app\"]/header/div/div/ul[1]/li[2]/a")
     private WebElement eventsTab;
 
@@ -31,9 +31,13 @@ public class HomePage {
     @FindBy(xpath = "//*[@class='evnt-description']")
     private WebElement evntDescription;
 
+    @FindBy(xpath = "//*[@id='onetrust-reject-all-handler']")
+    private WebElement buttonDisableCookies;
+
 
     public HomePage openHomePage() {
         driver.get("https://events.epam.com/");
+        buttonDisableCookies.click();
         evntDescription.isDisplayed();
         logger.debug("Checking the opening of the events.epam.com page");
         assertEquals(evntDescription.getText(), "ALL EVENTS LIVE HERE");
@@ -46,12 +50,12 @@ public class HomePage {
         eventsTab.click();
         checkPage.isDisplayed();
         logger.debug("Checking the opening of the event page");
-        assertEquals(checkPage.getText(),"ALL EVENTS");
+        assertEquals(checkPage.getText(), "ALL EVENTS");
         logger.info("Event page opened successfully");
         return this;
     }
 
-    public HomePage goToVideoTab(){
+    public HomePage goToVideoTab() {
         logger.info("Go to the video page");
         videoTab.click();
         checkPageVideo.isDisplayed();

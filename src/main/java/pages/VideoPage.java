@@ -2,15 +2,18 @@ package pages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 
 import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class VideoPage {
     public WebDriver driver;
@@ -29,12 +32,13 @@ public class VideoPage {
     //@FindBy(xpath = "//*[@class='form-check-label group-items' and @data-value='Testing']")
     //@FindBy(xpath = "//*[@id='filter_category_15']")
     @FindBy(xpath = "//*[@data-value='Testing']")
+//    @FindBy(className = "[data-value|='Testing']:before")
     public WebElement filterCategoryTesting;
 
     @FindBy(xpath = "//*[@id='filter_location']")
     public WebElement filterLocation;
 
-    @FindBy(xpath = "//*[@class='evnt-filter-item' and @data-group='Belarus']/child::div")
+    @FindBy(xpath = "//*[@data-value='Belarus']")
     public WebElement filterLocationBelarus;
 
     @FindBy(xpath = "//*[@id='filter_language']")
@@ -43,7 +47,7 @@ public class VideoPage {
     @FindBy(xpath = "//*[@class='form-check-label' and @data-value='ENGLISH']")
     public WebElement filterLanguageEnglish;
 
-    @FindBy(xpath = "//*[@class='evnt-talks-column cell-6']//child::a")
+    @FindBy(xpath = "//*[@class='evnt-card-wrapper']")
     public WebElement cardVideo;
 
     @FindBy(xpath = "//*[@class='evnt-topics-wrapper']//child::div/label")
@@ -53,7 +57,7 @@ public class VideoPage {
     public WebElement cardLanguage;
 
     @FindBy(xpath = "//*[@class='evnt-talk-details location evnt-now-past-talk']//child::span")
-    public List<WebElement> cardLocation;
+    public WebElement cardLocation;
 
     @FindBy(xpath = "//*[@placeholder='Search by Talk Name']")
     public WebElement inputSearch;
@@ -72,16 +76,21 @@ public class VideoPage {
         logger.info("Setting filters");
         filterCategory.isDisplayed();
         filterCategory.click();
+        Actions actions = new Actions(driver);
+        actions.moveToElement(filterCategoryTesting).build().perform();
         filterCategoryTesting.isDisplayed();
-        filterCategoryTesting.click();
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
+        executor.executeScript("arguments[0].click();", filterCategoryTesting);
         filterLocation.isDisplayed();
         filterLocation.click();
         filterLocationBelarus.isDisplayed();
-        filterLocationBelarus.click();
+        JavascriptExecutor executor1 = (JavascriptExecutor) driver;
+        executor1.executeScript("arguments[0].click();", filterLocationBelarus);
         filterLanguage.isDisplayed();
         filterLanguage.click();
         filterLanguageEnglish.isDisplayed();
         filterLanguageEnglish.click();
+        filterLanguage.click();
         return this;
     }
 
@@ -89,18 +98,19 @@ public class VideoPage {
         logger.info("Checking filtered Video Cards");
         cardVideo.isDisplayed();
         cardVideo.click();
+        boolean isContainTesting = false;
         for (WebElement webElement : listCategory) {
-            if (!webElement.getText().equals("Testing")) {
-                throw new ContainedTextException("Category isn't Testing");
+            if (webElement.getText().equals("Testing")) {
+                isContainTesting = true;
             }
         }
+        assertTrue(isContainTesting);
         assertEquals("ENGLISH", cardLanguage.getText());
-        for (int i = 0; i < cardLocation.size(); i++) {
-            if (!eventName.get(i).getText().contains("Belarus")) {
-                throw new ContainedTextException("The event location doesn't contain Belarus ");
-            }
+        if (!cardLocation.getText().contains("Belarus")) {
+            throw new ContainedTextException("The event location doesn't contain Belarus ");
         }
     }
+
 
     public VideoPage searchReports() {
         logger.info("Search for a report by keyword QA");
