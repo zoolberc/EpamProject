@@ -33,13 +33,12 @@ public class DriverConfiguration {
             remDriver = new InitRemoteDriver().initRemDriver();
             selfDriver = SelfHealingDriver.create(remDriver);
             logger.info("Remote browser driver open");
-            waitEl = new WebDriverWait(selfDriver, 20);
         } else {
             driver = new InitLocalDriver().initLocDriver();
             selfDriver = SelfHealingDriver.create(driver);
             logger.info("Local browser driver open");
-            waitEl = new WebDriverWait(driver, 20);
         }
+        waitEl = new WebDriverWait(selfDriver, 20);
         selfDriver.manage().window().maximize();
         selfDriver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
         homePage = PageFactory.initElements(selfDriver, HomePage.class);
