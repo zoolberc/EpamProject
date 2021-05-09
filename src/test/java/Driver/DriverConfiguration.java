@@ -28,7 +28,7 @@ public class DriverConfiguration {
 
 
     @BeforeEach
-    public void SetUp() throws MalformedURLException {
+    public void setUp() throws MalformedURLException {
         if (System.getProperty("RemBrowser").equals("true")) {
             remDriver = new InitRemoteDriver().initRemDriver();
             selfDriver = SelfHealingDriver.create(remDriver);
