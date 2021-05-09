@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static java.lang.Thread.sleep;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EventsPage {
     public WebDriver driver;

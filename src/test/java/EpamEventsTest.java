@@ -1,6 +1,8 @@
-import driver.DriverConfiguration;
-import org.junit.Test;
+import Driver.DriverConfiguration;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 import pages.EventsPage;
 
 import java.text.ParseException;

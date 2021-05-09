@@ -12,8 +12,8 @@ import org.openqa.selenium.support.FindBy;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VideoPage {
     public WebDriver driver;
